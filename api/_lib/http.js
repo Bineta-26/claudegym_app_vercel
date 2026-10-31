@@ -1,5 +1,5 @@
 // Shared request/response helpers for /api functions (works on Vercel and the local Express server).
-import { DbUnavailableError } from './db.js'
+import { DbUnavailableError, ensureSchema } from './db.js'
 
 export class HttpError extends Error {
   constructor(status, message, code) {
@@ -57,7 +57,15 @@ export function route(handlers) {
       return res.status(405).json({ error: `Method ${req.method} not allowed.` })
     }
     try {
-      await fn(req, res)
+      try {
+        await fn(req, res)
+      } catch (err) {
+        // First request against a fresh database: create the tables, then retry once.
+        if (err?.code !== '42P01' || res.headersSent) throw err
+        console.warn('[api] tables missing, running automatic setup:', err.message)
+        await ensureSchema()
+        await fn(req, res)
+      }
     } catch (err) {
       if (err instanceof HttpError) {
         return res.status(err.status).json({ error: err.message, code: err.code })

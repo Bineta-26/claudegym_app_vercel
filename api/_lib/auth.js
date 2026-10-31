@@ -1,13 +1,22 @@
 // JWT session helpers. The token lives in an httpOnly cookie, so page scripts can never read it.
 import { SignJWT, jwtVerify } from 'jose'
+import { createHash } from 'node:crypto'
 import { HttpError, parseCookies } from './http.js'
+import { databaseUrl } from './db.js'
 
 const COOKIE = 'pf_session'
 const MAX_AGE = 60 * 60 * 24 * 30 // 30 days
 
+// Uses JWT_SECRET when set. Otherwise derives a stable server-only key from the
+// database connection string, so logins still work if JWT_SECRET was not added.
 function secret() {
-  if (!process.env.JWT_SECRET) throw new Error('JWT_SECRET is not set')
-  return new TextEncoder().encode(process.env.JWT_SECRET)
+  let key = process.env.JWT_SECRET?.trim()
+  if (!key) {
+    const url = databaseUrl()
+    if (!url) throw new Error('JWT_SECRET is not set')
+    key = createHash('sha256').update(`pulsefit-session:${url}`).digest('hex')
+  }
+  return new TextEncoder().encode(key)
 }
 
 function cookie(value, maxAge) {
