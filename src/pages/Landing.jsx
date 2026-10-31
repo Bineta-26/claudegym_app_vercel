@@ -24,12 +24,12 @@ function useCommunityStats() {
 }
 
 const features = [
-  { icon: Dumbbell, title: 'Smart workout library', text: '120+ exercises, filtered by muscle group and difficulty.', to: '/library', color: '#c6ff3d' },
-  { icon: Timer, title: 'Live workout mode', text: 'Rest timers, set tracking and a little party when you finish.', to: '/workout', color: '#22e4ff' },
-  { icon: TrendingUp, title: 'Progress you can see', text: 'Strength curves and PR trophies that keep you coming back.', to: '/progress', color: '#ff5fa2' },
-  { icon: CalendarDays, title: 'Book classes in a tap', text: 'Yoga, HIIT, Spin and Boxing with live spot counts.', to: '/classes', color: '#ff9f43' },
-  { icon: Flame, title: 'Streaks that stick', text: 'Daily streaks and weekly rings to build the habit.', to: '/dashboard', color: '#fb923c' },
-  { icon: Trophy, title: 'Earn your badges', text: 'Unlock achievements as you hit new milestones.', to: '/profile', color: '#a78bfa' },
+  { icon: Dumbbell, title: 'Smart workout library', text: '120+ exercises, filtered by muscle group and difficulty.', to: '/library', color: '#c6ff3d', img: '/images/library.webp' },
+  { icon: Timer, title: 'Live workout mode', text: 'Rest timers, set tracking and a little party when you finish.', to: '/workout', color: '#22e4ff', img: '/images/live-workout.webp' },
+  { icon: TrendingUp, title: 'Progress you can see', text: 'Strength curves and PR trophies that keep you coming back.', to: '/progress', color: '#ff5fa2', img: '/images/progress.webp' },
+  { icon: CalendarDays, title: 'Book classes in a tap', text: 'Yoga, HIIT, Spin and Boxing with live spot counts.', to: '/classes', color: '#ff9f43', img: '/images/classes.webp' },
+  { icon: Flame, title: 'Streaks that stick', text: 'Daily streaks and weekly rings to build the habit.', to: '/dashboard', color: '#fb923c', img: '/images/streaks.webp' },
+  { icon: Trophy, title: 'Earn your badges', text: 'Unlock achievements as you hit new milestones.', to: '/profile', color: '#a78bfa', img: '/images/badges.webp' },
 ]
 
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.12 } } }
@@ -44,7 +44,11 @@ function HeroVisual() {
       className="relative mx-auto w-full max-w-sm"
     >
       <div className="absolute inset-8 rounded-full bg-gradient-to-br from-lime-400/40 to-cyan-400/40 blur-3xl" />
-      <div className="glass relative !rounded-[36px] p-6">
+      <div className="relative mb-[-5.5rem] overflow-hidden rounded-[36px] border" style={{ borderColor: 'var(--glass-border)' }}>
+        <img src="/images/hero.webp" alt="Athlete doing a kettlebell swing in a neon-lit gym" className="aspect-[16/10] w-full object-cover object-[70%_center]" fetchpriority="high" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+      </div>
+      <div className="glass relative mx-4 !rounded-[36px] p-6">
         <div className="flex items-center justify-between">
           <div>
             <p className="muted text-xs uppercase tracking-widest">Today</p>
@@ -211,7 +215,10 @@ export default function Landing() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((f, i) => (
             <motion.div key={f.title} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-60px' }} transition={{ delay: (i % 3) * 0.1, duration: 0.6 }}>
-              <Link to={f.to} className="glass lift group block h-full p-6">
+              <Link to={f.to} className="glass lift group block h-full overflow-hidden p-6">
+                <div className="-mx-6 -mt-6 mb-5 overflow-hidden">
+                  <img src={f.img} alt={f.title} loading="lazy" className="aspect-[16/9] w-full object-cover transition duration-500 group-hover:scale-105" />
+                </div>
                 <span className="mb-5 grid h-12 w-12 place-items-center rounded-2xl" style={{ background: `${f.color}22`, color: f.color, boxShadow: `0 0 30px -10px ${f.color}` }}>
                   <f.icon size={22} />
                 </span>
@@ -229,6 +236,7 @@ export default function Landing() {
 
       <section className="relative z-10 mx-auto max-w-7xl px-4 pb-20 md:px-8">
         <div className="relative overflow-hidden rounded-[36px] bg-gradient-to-br from-lime-400 via-emerald-300 to-cyan-400 p-10 text-ink-950 md:p-16">
+          <img src="/images/cta-banner.webp" alt="" aria-hidden="true" loading="lazy" className="absolute inset-y-0 right-0 hidden h-full w-3/5 object-cover md:block" style={{ maskImage: 'linear-gradient(to right, transparent, black 45%)', WebkitMaskImage: 'linear-gradient(to right, transparent, black 45%)' }} />
           <div className="absolute -right-10 -top-10 h-64 w-64 rounded-full bg-white/30 blur-3xl" />
           <h2 className="relative max-w-xl text-4xl font-bold md:text-5xl">Your next PR starts today.</h2>
           <p className="relative mt-3 max-w-md text-ink-900/80">Jump into today's workout. It takes less than 50 minutes and your future self will thank you.</p>
