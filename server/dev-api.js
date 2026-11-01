@@ -6,6 +6,7 @@ import express from 'express'
 import { readdirSync, existsSync } from 'node:fs'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import path from 'node:path'
+import { databaseUrl } from '../api/_lib/db.js'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const apiDir = path.join(root, 'api')
@@ -53,5 +54,5 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`⚡ PulseFit API ready on http://localhost:${PORT} (${routes.length} routes: ${routes.map((r) => r.url).join(', ')})`)
-  if (!process.env.DATABASE_URL) console.log('⚠️  DATABASE_URL is not set: API calls will answer "database not connected".')
+  if (!databaseUrl()) console.log('⚠️  DATABASE_URL is not set: API calls will answer "database not connected".')
 })
