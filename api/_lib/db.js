@@ -47,3 +47,16 @@ export function ensureSchema() {
   })
   return setupPromise
 }
+
+// The sample classes are scheduled relative to the current week, so add the new
+// week's timetable when it is missing. Safe to repeat (ON CONFLICT DO NOTHING).
+let classesWeek
+export async function ensureWeeklyClasses() {
+  const now = new Date()
+  const week = `${now.getUTCFullYear()}-${Math.floor((now - Date.UTC(now.getUTCFullYear(), 0, 1)) / 604800000)}`
+  if (classesWeek === week) return
+  const { SEED_SQL } = await import('./setup-sql.js')
+  const statement = SEED_SQL.slice(SEED_SQL.indexOf('INSERT INTO classes')).replace(/;\s*$/, '')
+  await db().query(statement)
+  classesWeek = week
+}
