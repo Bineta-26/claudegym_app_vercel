@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { Pool, neonConfig } from '@neondatabase/serverless'
 import { ensureEnv } from './ensure-env.js'
+import { databaseUrl } from '../api/_lib/db.js'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -13,7 +14,7 @@ process.loadEnvFile(path.join(root, '.env'))
 // Node 22+ ships a global WebSocket, which the Pool uses for multi-statement SQL files
 neonConfig.webSocketConstructor = globalThis.WebSocket
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL })
+const pool = new Pool({ connectionString: databaseUrl() })
 
 try {
   const client = await pool.connect()
