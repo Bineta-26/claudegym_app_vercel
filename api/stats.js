@@ -1,9 +1,10 @@
 // Public community numbers for the landing page.
-import { db } from './_lib/db.js'
+import { db, ensureWeeklyClasses } from './_lib/db.js'
 import { route } from './_lib/http.js'
 
 export default route({
   async GET(req, res) {
+    await ensureWeeklyClasses()
     const [row] = await db()`
       SELECT
         (SELECT COUNT(*) FROM users)::int                                    AS members,
